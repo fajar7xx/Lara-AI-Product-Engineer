@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'gemini' => [
+        'model' => env('GEMINI_MODEL', 'gemini-3.5-flash'),
+        'timeout' => env('GEMINI_TIMEOUT', 120),
+    ],
+
 ];
