@@ -9,6 +9,7 @@ use App\Ai\Agents\UserStoriesGenerationAgent;
 use App\Models\GenerationOutput;
 use App\Models\TranscriptSession;
 use Illuminate\Contracts\Support\Arrayable;
+use Laravel\Ai\Exceptions\FailoverableException;
 use Throwable;
 
 class SessionGenerationService
@@ -79,6 +80,10 @@ class SessionGenerationService
             /** @var GenerationOutput $output */
             $output = $outputs[$type];
 
+            if ($output->status === GenerationOutput::STATUS_COMPLETED) {
+                continue;
+            }
+
             $output->forceFill([
                 'status' => GenerationOutput::STATUS_PROCESSING,
                 'error_message' => null,
@@ -93,6 +98,13 @@ class SessionGenerationService
                     'content' => $content,
                     'error_message' => null,
                 ])->save();
+            } catch (FailoverableException $exception) {
+                $output->forceFill([
+                    'status' => GenerationOutput::STATUS_PENDING,
+                    'error_message' => $this->transientProviderMessage($exception),
+                ])->save();
+
+                throw $exception;
             } catch (Throwable $throwable) {
                 $output->forceFill([
                     'status' => GenerationOutput::STATUS_FAILED,
@@ -250,6 +262,14 @@ class SessionGenerationService
         $normalized = preg_replace('/\s+/', ' ', strip_tags($content)) ?? $content;
 
         return trim($normalized);
+    }
+
+    protected function transientProviderMessage(FailoverableException $exception): string
+    {
+        return sprintf(
+            'Temporary AI provider issue: %s The system will retry automatically.',
+            $exception->getMessage()
+        );
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Models\GenerationOutput;
 use App\Models\TranscriptSession;
 use App\Models\User;
 use Illuminate\Support\Facades\Queue;
+use Laravel\Ai\Exceptions\ProviderOverloadedException;
 use Livewire\Livewire;
 
 test('successful extract redirects to the clarification page', function () {
@@ -30,6 +31,20 @@ test('successful extract redirects to the clarification page', function () {
         ->call('save')
         ->assertHasNoErrors()
         ->assertRedirect(route('transcripts.clarify', ['transcriptSession' => TranscriptSession::first()]));
+});
+
+test('provider overload during extraction shows a user facing retry message', function () {
+    TranscriptExtractionAgent::fake(function (): never {
+        throw ProviderOverloadedException::forProvider('gemini');
+    })->preventStrayPrompts();
+
+    $this->actingAs(User::factory()->create());
+
+    Livewire::test('pages::transcripts.create')
+        ->set('transcript', 'We are building a product for product managers and founders. The app should turn transcripts into structured documentation, recommend a dashboard-ready shell, and capture the team goals and feature requirements for a cleaner planning workflow.')
+        ->call('save')
+        ->assertHasErrors(['transcript'])
+        ->assertSee('Gemini is temporarily overloaded. Please try again in a minute.');
 });
 
 test('clarification page shows extracted defaults and recommendations', function () {

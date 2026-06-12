@@ -47,6 +47,19 @@ class GenerateSessionOutputs implements ShouldQueue
             return;
         }
 
+        $types = $this->targetTypes ?? \App\Models\GenerationOutput::supportedTypes();
+
+        $transcriptSession->generationOutputs()
+            ->whereIn('type', $types)
+            ->where('status', '!=', \App\Models\GenerationOutput::STATUS_COMPLETED)
+            ->get()
+            ->each(function (\App\Models\GenerationOutput $output) use ($throwable): void {
+                $output->forceFill([
+                    'status' => \App\Models\GenerationOutput::STATUS_FAILED,
+                    'error_message' => $throwable->getMessage(),
+                ])->save();
+            });
+
         $transcriptSession->forceFill([
             'status' => TranscriptSession::STATUS_FAILED,
         ])->save();

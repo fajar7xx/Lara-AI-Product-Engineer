@@ -9,6 +9,7 @@ use App\Models\GenerationOutput;
 use App\Models\TranscriptSession;
 use App\Models\User;
 use App\Services\Generation\SessionGenerationService;
+use Laravel\Ai\Exceptions\ProviderOverloadedException;
 
 test('generation job updates outputs in order and completes session when all succeed', function () {
     PrdGenerationAgent::fake([['content' => "```md\n# Wrong Title\n- PRD body\n```"]])->preventStrayPrompts();
@@ -64,6 +65,56 @@ test('generation continues after one output fails and marks the session partial'
     expect($transcriptSession->generationOutputs()->where('type', GenerationOutput::TYPE_PRD)->first()?->status)->toBe(GenerationOutput::STATUS_FAILED);
     expect($transcriptSession->generationOutputs()->where('type', GenerationOutput::TYPE_USER_STORIES)->first()?->status)->toBe(GenerationOutput::STATUS_COMPLETED);
     expect($transcriptSession->generationOutputs()->where('type', GenerationOutput::TYPE_HTML_PAGE)->first()?->status)->toBe(GenerationOutput::STATUS_COMPLETED);
+});
+
+test('provider overload triggers retry path and resumes from pending outputs', function () {
+    PrdGenerationAgent::fake([['content' => '- PRD body']])->preventStrayPrompts();
+    UserStoriesGenerationAgent::fake(function (): never {
+        throw ProviderOverloadedException::forProvider('gemini');
+    })->preventStrayPrompts();
+    FunctionalRequirementsGenerationAgent::fake([['content' => '- Requirement body']])->preventStrayPrompts();
+    HtmlPageContentAgent::fake([[
+        'title' => 'SpecSprint',
+        'tagline' => 'Fast product planning.',
+        'sections' => [
+            ['heading' => 'Overview', 'body' => 'Generated page body.'],
+        ],
+    ]])->preventStrayPrompts();
+
+    $transcriptSession = preparedTranscriptSession();
+
+    app(SessionGenerationService::class)->ensureOutputs($transcriptSession);
+
+    expect(fn () => app()->call([new GenerateSessionOutputs($transcriptSession->id), 'handle']))
+        ->toThrow(ProviderOverloadedException::class);
+
+    $transcriptSession->refresh();
+
+    expect($transcriptSession->generationOutputs()->where('type', GenerationOutput::TYPE_PRD)->first()?->status)
+        ->toBe(GenerationOutput::STATUS_COMPLETED);
+    expect($transcriptSession->generationOutputs()->where('type', GenerationOutput::TYPE_USER_STORIES)->first()?->status)
+        ->toBe(GenerationOutput::STATUS_PENDING);
+    expect($transcriptSession->generationOutputs()->where('type', GenerationOutput::TYPE_USER_STORIES)->first()?->error_message)
+        ->toContain('Temporary AI provider issue');
+    expect($transcriptSession->generationOutputs()->where('type', GenerationOutput::TYPE_HTML_PAGE)->first()?->status)
+        ->toBe(GenerationOutput::STATUS_PENDING);
+
+    UserStoriesGenerationAgent::fake([['content' => '- Story body']])->preventStrayPrompts();
+    FunctionalRequirementsGenerationAgent::fake([['content' => '- Requirement body']])->preventStrayPrompts();
+    HtmlPageContentAgent::fake([[
+        'title' => 'SpecSprint',
+        'tagline' => 'Fast product planning.',
+        'sections' => [
+            ['heading' => 'Overview', 'body' => 'Generated page body.'],
+        ],
+    ]])->preventStrayPrompts();
+
+    app()->call([new GenerateSessionOutputs($transcriptSession->id), 'handle']);
+
+    $transcriptSession->refresh();
+
+    expect($transcriptSession->status)->toBe(TranscriptSession::STATUS_COMPLETED);
+    expect($transcriptSession->generationOutputs()->where('status', GenerationOutput::STATUS_COMPLETED)->count())->toBe(4);
 });
 
 function preparedTranscriptSession(): TranscriptSession

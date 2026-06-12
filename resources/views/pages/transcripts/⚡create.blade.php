@@ -7,6 +7,7 @@ use Flux\Flux;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Ai\Exceptions\FailoverableException;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
@@ -48,7 +49,13 @@ new #[Title('Create transcript session')] class extends Component {
             'status' => 'draft',
         ]);
 
-        app(TranscriptExtractionService::class)->extractAndPersist($transcriptSession);
+        try {
+            app(TranscriptExtractionService::class)->extractAndPersist($transcriptSession);
+        } catch (FailoverableException $exception) {
+            $this->addError('transcript', __('Gemini is temporarily overloaded. Please try again in a minute.'));
+
+            return;
+        }
 
         Flux::toast(variant: 'success', text: __('Transcript extracted. Review the clarification details.'));
 
