@@ -1,18 +1,20 @@
 <x-layouts::app :title="__('Dashboard')">
-    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+    <div class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl">
+        <flux:card class="max-w-4xl">
+            <div class="space-y-4">
+                <div class="space-y-2">
+                    <flux:heading size="xl">{{ __('AI PRD UI Generator') }}</flux:heading>
+                    <flux:text>
+                        {{ __('Create a transcript session, validate the meeting content, and prepare the AI-assisted documentation workflow.') }}
+                    </flux:text>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <flux:button :href="route('transcripts.create')" variant="primary" wire:navigate>
+                        {{ __('Start New Transcript Session') }}
+                    </flux:button>
+                </div>
             </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>
-        </div>
-        <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-            <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-        </div>
+        </flux:card>
     </div>
 </x-layouts::app>
