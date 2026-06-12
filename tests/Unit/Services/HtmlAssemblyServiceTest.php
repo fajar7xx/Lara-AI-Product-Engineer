@@ -11,10 +11,10 @@ test('landing template renders expected section skeleton', function () {
         ],
     ]);
 
-    expect($html)->toContain('landing');
     expect($html)->toContain('SpecSprint');
     expect($html)->toContain('Fast Output');
-    expect($html)->toContain('Primary Action');
+    expect($html)->toContain('Get Started');
+    expect($html)->toContain('Features');
 });
 
 test('app shell template renders expected shell structure', function () {
@@ -26,8 +26,8 @@ test('app shell template renders expected shell structure', function () {
         ],
     ]);
 
-    expect($html)->toContain('app_shell');
-    expect($html)->toContain('Workspace Overview');
+    expect($html)->toContain('SpecSprint Workspace');
+    expect($html)->toContain('Modules');
     expect($html)->toContain('Recent Outputs');
 });
 

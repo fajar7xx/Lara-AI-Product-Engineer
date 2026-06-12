@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\TranscriptSession;
 use App\Jobs\GenerateSessionOutputs;
 use App\Models\GenerationOutput;
+use App\Models\TranscriptSession;
 use App\Services\Exports\PdfExportService;
 use App\Services\Generation\SessionGenerationService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -12,10 +12,12 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Transcript session')] class extends Component {
+new #[Title('Transcript session')] class extends Component
+{
     use AuthorizesRequests;
 
     public TranscriptSession $transcriptSession;
+
     /** @var array<int, string> */
     public array $selectedOutputTypes = [];
 
@@ -229,9 +231,16 @@ new #[Title('Transcript session')] class extends Component {
                                     </label>
 
                                     @if ($output->status === \App\Models\GenerationOutput::STATUS_COMPLETED && $output->content)
-                                        <flux:button type="button" size="sm" variant="ghost" wire:click="downloadPdf('{{ $output->type }}')" icon="arrow-down-tray">
-                                            {{ __('Export PDF') }}
-                                        </flux:button>
+                                        <div class="flex items-center gap-2">
+                                            @if ($output->type === \App\Models\GenerationOutput::TYPE_HTML_PAGE)
+                                                <flux:button type="button" size="sm" variant="ghost" tag="a" :href="route('transcripts.preview', ['transcriptSession' => $transcriptSession, 'type' => $output->type])" target="_blank" icon="arrow-top-right-on-square">
+                                                    {{ __('Preview') }}
+                                                </flux:button>
+                                            @endif
+                                            <flux:button type="button" size="sm" variant="ghost" wire:click="downloadPdf('{{ $output->type }}')" icon="arrow-down-tray">
+                                                {{ __('Export PDF') }}
+                                            </flux:button>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -244,7 +253,7 @@ new #[Title('Transcript session')] class extends Component {
 
                             @if ($output->type === \App\Models\GenerationOutput::TYPE_HTML_PAGE && $output->content)
                                 <iframe
-                                    class="h-96 w-full rounded-xl border border-zinc-200"
+                                    class="h-[32rem] w-full rounded-xl border border-zinc-200"
                                     srcdoc="{{ e($output->content) }}"
                                     title="{{ $output->type }}"
                                 ></iframe>
