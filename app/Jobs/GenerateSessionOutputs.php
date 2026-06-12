@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\GenerationOutput;
 use App\Models\TranscriptSession;
 use App\Services\Generation\SessionGenerationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -47,15 +48,15 @@ class GenerateSessionOutputs implements ShouldQueue
             return;
         }
 
-        $types = $this->targetTypes ?? \App\Models\GenerationOutput::supportedTypes();
+        $types = $this->targetTypes ?? GenerationOutput::supportedTypes();
 
         $transcriptSession->generationOutputs()
             ->whereIn('type', $types)
-            ->where('status', '!=', \App\Models\GenerationOutput::STATUS_COMPLETED)
+            ->where('status', '!=', GenerationOutput::STATUS_COMPLETED)
             ->get()
-            ->each(function (\App\Models\GenerationOutput $output) use ($throwable): void {
+            ->each(function (GenerationOutput $output) use ($throwable): void {
                 $output->forceFill([
-                    'status' => \App\Models\GenerationOutput::STATUS_FAILED,
+                    'status' => GenerationOutput::STATUS_FAILED,
                     'error_message' => $throwable->getMessage(),
                 ])->save();
             });

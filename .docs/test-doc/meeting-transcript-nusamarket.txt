@@ -1,0 +1,372 @@
+================================================================
+MEETING TRANSCRIPT — PROJECT KICKOFF & REQUIREMENT ALIGNMENT
+================================================================
+Project   : NusaMarket — Platform E-Commerce & Marketplace Lokal
+Client    : PT. Nusa Digital Retail
+Agency    : Kreativa Digital Agency
+Tanggal   : Senin, 9 Juni 2026
+Waktu     : 10:00 — 12:45 WIB
+Platform  : Google Meet + Miro Board
+Notulis   : Dina Rahayu (BA/QA)
+
+Peserta:
+  - Rina Kusuma       [PM]   — Project Manager, Kreativa Digital Agency
+  - Arief Santoso     [TL]   — Tech Lead / Senior Engineer, Kreativa Digital Agency
+  - Bagas Prasetyo    [UI]   — UI/UX Designer, Kreativa Digital Agency
+  - Dina Rahayu       [BA]   — Business Analyst / QA, Kreativa Digital Agency
+  - Pak Hendra        [CL]   — Head of Digital, PT. Nusa Digital Retail (Client)
+  - Mbak Tiara        [CL]   — Marketing Manager, PT. Nusa Digital Retail (Client)
+
+================================================================
+BAGIAN 1 — PEMBUKAAN & CONTEXT SETTING (10:00 - 10:20)
+================================================================
+
+RINA [PM]:
+Okay, selamat pagi semua. Terima kasih sudah join tepat waktu, terutama Pak Hendra dan Mbak Tiara yang tadi bilang ada meeting internal jam 1. Jadi kita akan usahakan selesai sebelum jam 1 ya.
+
+Agenda hari ini ada tiga: pertama, alignment soal scope dan objectives project NusaMarket. Kedua, kita bahas user stories dan functional requirements bersama-sama supaya semua punya pemahaman yang sama. Ketiga, Bagas akan share beberapa direction untuk wireframe awal. Kita tidak akan finalisasi desain hari ini, tapi setidaknya kita align dulu di direction-nya.
+
+Pak Hendra, sebelum kita mulai, boleh minta Anda recap singkat kenapa NusaMarket ini lahir? Supaya tim kami semua punya konteks yang sama.
+
+PAK HENDRA [CL]:
+Tentu, Rina. Jadi begini — PT. Nusa Digital Retail ini sudah 12 tahun di bisnis retail offline. Kita punya 200-an merchant partner di seluruh Jawa dan Bali, menjual produk-produk lokal UMKM. Selama ini sistemnya manual banget — merchant kirim order lewat WhatsApp, kita rekapnya di spreadsheet, dan jujur saja itu sudah tidak scalable.
+
+Kompetitor kita seperti Tokopedia dan Shopee sudah terlalu besar, kita tidak mau compete head-to-head. Strategi kita adalah fokus ke "produk lokal berkualitas" — kita positioning sebagai kurasi marketplace, bukan open marketplace. Jadi tidak semua seller bisa masuk, harus kurasi dulu. Ini yang membedakan NusaMarket.
+
+Target kita adalah go-live dalam 4 bulan. Iya, saya tahu itu ambisius. Makanya kita harus sangat jelas soal scope dari hari ini.
+
+MBAK TIARA [CL]:
+Tambahan dari sisi marketing, Rina — kita sudah punya waiting list 3.000-an buyers potensial dari campaign Instagram kita bulan lalu. Jadi urgensinya memang tinggi. Mereka expect bisa belanja dalam waktu dekat.
+
+RINA [PM]:
+Baik, sangat clear. Pak Hendra, Mbak Tiara, itu sangat membantu. Dina, pastikan itu tercatat ya — positioning sebagai kurasi marketplace, bukan open marketplace. Itu akan sangat berpengaruh ke feature set kita.
+
+DINA [BA]:
+Sudah dicatat, Rina.
+
+================================================================
+BAGIAN 2 — GOALS & TARGET USERS (10:20 - 10:40)
+================================================================
+
+RINA [PM]:
+Oke, kita masuk ke bagian goals. Berdasarkan brief yang Pak Hendra kirimkan minggu lalu, saya sudah rangkum jadi tiga primary goals. Saya bacakan dulu, nanti kita diskusi.
+
+Goal pertama: memberikan platform digital kepada 200+ merchant partner yang ada sekarang untuk manage produk dan order secara mandiri. Goal kedua: memberikan pengalaman belanja yang focused ke produk lokal berkualitas bagi end buyers. Goal ketiga: membangun sistem operasional internal untuk tim Nusa Digital Retail dalam memonitor transaksi dan kurasi seller baru.
+
+Pak Hendra, apakah ketiga goals ini sudah capture apa yang ada di kepala Anda?
+
+PAK HENDRA [CL]:
+Sudah cukup tepat. Saya mau tambahkan satu hal: sistem notifikasi yang reliable. Merchant kami banyak yang tidak terlalu tech-savvy. Kalau ada order masuk, mereka harus dapat notifikasi yang jelas — WhatsApp atau SMS, bukan cuma email. Itu pain point yang sering mereka komplain di sistem lama.
+
+ARIEF [TL]:
+Noted, Pak Hendra. Itu masuk ke NFR kita nanti ya, soal notification channel. Kita bisa integrasikan WhatsApp Business API atau Twilio untuk SMS.
+
+RINA [PM]:
+Good point. Dina catat sebagai requirement tambahan. Sekarang soal target users — kita punya tiga persona utama. Pertama, Seller atau Merchant: UMKM lokal yang sudah jadi partner Nusa. Rata-rata mereka punya 10-50 SKU produk. Tidak semua melek teknologi, jadi seller dashboard harus sangat simpel. Kedua, Buyer: end consumer yang cari produk lokal berkualitas. Demografinya 25-40 tahun, urban, familiar dengan belanja online. Ketiga, Admin Nusa: tim internal yang handle kurasi seller, monitoring transaksi, dan dispute resolution.
+
+MBAK TIARA [CL]:
+Rina, untuk buyer — kita juga harus pikirkan mobile experience yang bagus. Data dari Instagram kita, 87% engagement itu dari mobile. Jadi kalau websitenya tidak mobile-friendly, kita akan kehilangan banyak potensi konversi.
+
+BAGAS [UI]:
+Betul Mbak Tiara. Saya sudah set dari awal bahwa pendekatan desainnya mobile-first. Nanti di bagian wireframe saya jelaskan lebih detail.
+
+================================================================
+BAGIAN 3 — SCOPE DISCUSSION (10:40 - 11:05)
+================================================================
+
+RINA [PM]:
+Oke kita masuk ke scope. Ini bagian yang paling krusial karena timeline kita hanya 4 bulan. Saya akan propose apa yang masuk MVP dan apa yang kita defer ke phase 2.
+
+Untuk phase 1 MVP, yang saya propose masuk scope adalah: satu, product catalog dengan sistem kategori. Dua, seller dashboard — upload produk, manage stok, lihat order. Tiga, buyer experience — browse, search, product detail, cart, checkout. Empat, payment gateway integration. Lima, order management — tracking status order untuk buyer dan seller. Enam, admin panel untuk kurasi seller dan monitoring. Tujuh, notifikasi — WhatsApp dan email.
+
+Yang saya propose defer ke phase 2: fitur review dan rating, loyalty program, live chat antara buyer dan seller, flash sale atau voucher system, dan mobile app native.
+
+PAK HENDRA [CL]:
+Rina, saya setuju dengan sebagian besar itu. Tapi saya ingin tanya soal review dan rating — itu tidak bisa masuk phase 1? Bagi saya, itu cukup penting untuk membangun trust ke buyer baru.
+
+ARIEF [TL]:
+Pak Hendra, dari sisi teknis, review dan rating itu tidak terlalu kompleks sebenarnya. Yang membuatnya risky di phase 1 adalah kita perlu policy yang jelas dulu — siapa yang boleh review, bagaimana handle fake review, apakah ada moderasi. Itu lebih ke business decision daripada technical.
+
+PAK HENDRA [CL]:
+Ah, saya mengerti maksudnya. Baiklah, kita defer dulu. Tapi tolong masukkan ke phase 2 sebagai prioritas utama.
+
+DINA [BA]:
+Pak Hendra, satu pertanyaan soal payment. Apakah ada payment method spesifik yang harus supported di phase 1? Misalnya, apakah COD harus ada?
+
+MBAK TIARA [CL]:
+COD itu penting sekali untuk target market kita. Banyak merchant partner kita yang buyernya di daerah masih prefer COD.
+
+ARIEF [TL]:
+Oke, COD harus masuk. Selain COD, kita asumsikan bank transfer, dan minimal dua e-wallet populer — GoPay dan OVO. Midtrans bisa handle semua itu dalam satu integrasi, jadi tidak terlalu kompleks dari sisi teknis.
+
+RINA [PM]:
+Good. Dina, update scope: payment methods yang harus supported di phase 1 adalah COD, bank transfer virtual account, GoPay, dan OVO. Via Midtrans.
+
+================================================================
+BAGIAN 4 — USER STORIES WALKTHROUGH (11:05 - 11:45)
+================================================================
+
+RINA [PM]:
+Sekarang kita walkthrough user stories. Saya sudah draft beberapa, kita diskusi bersama. Saya akan mulai dari seller journey karena itu yang paling kompleks.
+
+User story pertama, dari perspektif seller: "Sebagai seller yang baru diapprove, saya ingin bisa upload produk dengan mudah — termasuk foto, deskripsi, harga, dan stok — supaya produk saya bisa langsung dilihat buyer."
+
+BAGAS [UI]:
+Untuk ini, dari sisi design saya sudah pikirkan flow-nya. Upload produk harus semaksimal mungkin guided. Jadi ada step-by-step wizard, bukan satu form panjang yang overwhelming buat seller yang tidak terbiasa. Step 1: info dasar produk. Step 2: foto produk — kita bantu dengan preview langsung. Step 3: harga dan stok. Step 4: review sebelum publish.
+
+ARIEF [TL]:
+Setuju dengan approach wizard itu Bagas. Dari sisi teknis, kita perlu define acceptance criteria yang clear untuk foto. Berapa maksimal foto per produk? Format apa yang diterima? Maksimal ukuran file?
+
+DINA [BA]:
+Saya sudah draft acceptance criteria untuk ini. Maksimal 5 foto per produk. Format JPG dan PNG. Maksimal 2MB per foto. Ada auto-compression kalau ukuran melebihi limit. Dan ada validasi bahwa minimal 1 foto harus diupload sebelum bisa publish.
+
+ARIEF [TL]:
+Perfect. Satu lagi — perlu ada status produk: draft, pending review oleh admin, active, dan inactive. Seller tidak bisa langsung publish ke live tanpa approval admin, karena ini kurasi marketplace kan.
+
+PAK HENDRA [CL]:
+Betul Arief. Proses kurasi itu penting. Tapi jangan sampai prosesnya terlalu lama. SLA review produk baru paling lama 24 jam kerja.
+
+RINA [PM]:
+Noted. Dina, tambahkan itu ke acceptance criteria user story upload produk: admin harus review dalam 24 jam kerja, seller dapat notifikasi WhatsApp saat produk di-approve atau di-reject beserta alasannya.
+
+DINA [BA]:
+Dicatat.
+
+RINA [PM]:
+User story kedua, masih seller: "Sebagai seller, saya ingin menerima notifikasi real-time saat ada order masuk, supaya saya bisa segera memproses order dan tidak membuat buyer menunggu lama."
+
+PAK HENDRA [CL]:
+Ini sangat penting. Kalau seller lambat konfirmasi, buyer akan cancel dan tidak kembali lagi.
+
+ARIEF [TL]:
+Kita perlu define SLA juga di sini. Berapa lama seller harus konfirmasi order? Kalau tidak dikonfirmasi dalam waktu tertentu, apa yang terjadi — auto-cancel atau eskalasi ke admin?
+
+MBAK TIARA [CL]:
+Dari pengalaman bisnis kita, 2 jam itu sudah cukup sebagai batas konfirmasi untuk jam kerja. Di luar jam kerja, 8 jam mungkin lebih realistis.
+
+DINA [BA]:
+Jadi acceptance criteria-nya: seller mendapat notifikasi WhatsApp dan in-app saat order masuk. Seller harus konfirmasi dalam 2 jam di jam kerja, 8 jam di luar jam kerja. Kalau lewat batas waktu, sistem otomatis escalate ke admin dan buyer mendapat notifikasi bahwa order sedang diproses oleh tim Nusa.
+
+ARIEF [TL]:
+Untuk implementasi timer ini, kita butuh scheduled job atau queue system yang reliable. Kita bisa pakai Laravel Queue dengan Redis. Dina, pastikan itu masuk ke technical requirements ya.
+
+RINA [PM]:
+Oke, lanjut ke buyer journey. User story ketiga: "Sebagai buyer, saya ingin bisa search produk dengan filter kategori, harga, dan lokasi seller, supaya saya mudah menemukan produk yang saya cari."
+
+BAGAS [UI]:
+Untuk search experience, saya propose ada dua entry point. Satu, search bar di homepage yang prominent — karena ini action utama buyer. Dua, filter panel di halaman katalog yang bisa di-toggle, supaya tidak overwhelming di mobile.
+
+Filter yang perlu ada di phase 1: kategori produk, range harga dengan slider, lokasi seller berdasarkan provinsi, dan sort by — terbaru, terpopuler, harga terendah, harga tertinggi.
+
+DINA [BA]:
+Bagas, untuk "terpopuler" — kita define popularitas berdasarkan apa? Jumlah views? Jumlah terjual? Karena di awal launch, data ini belum ada.
+
+BAGAS [UI]:
+Good catch Dina. Mungkin untuk awal kita skip "terpopuler" dulu, atau kita ganti dengan "pilihan editor" yang bisa di-set manual oleh admin.
+
+PAK HENDRA [CL]:
+"Pilihan Editor" itu ide bagus sebenarnya. Kita bisa highlight produk-produk tertentu yang mau kita promote.
+
+ARIEF [TL]:
+Oke, jadi sort options di phase 1: terbaru, harga terendah, harga tertinggi, dan pilihan editor. Pilihan editor bisa di-curate dari admin panel.
+
+RINA [PM]:
+Perfect. User story keempat dari buyer: "Sebagai buyer, saya ingin proses checkout yang simple dan aman, dengan pilihan pembayaran yang beragam, supaya saya bisa menyelesaikan pembelian tanpa hambatan."
+
+ARIEF [TL]:
+Untuk checkout flow, saya propose maksimal 3 step. Step 1: review cart dan pilih alamat pengiriman. Step 2: pilih metode pembayaran dan review order summary termasuk ongkir. Step 3: konfirmasi dan payment. Setelah payment, langsung redirect ke order confirmation page.
+
+DINA [BA]:
+Untuk kalkulasi ongkir, kita pakai API apa? Rajaongkir? JNE langsung?
+
+ARIEF [TL]:
+Rajaongkir adalah yang paling straightforward untuk integrasi. Support JNE, TIKI, JT, SiCepat — itu sudah cover sebagian besar kebutuhan.
+
+MBAK TIARA [CL]:
+Satu catatan penting — buyer harus bisa track order-nya. Itu basic expectation sekarang. Kalau tidak ada tracking, banyak yang akan komplain ke customer service kita.
+
+ARIEF [TL]:
+Order tracking itu included ya di scope kita. Buyer bisa lihat status order dari order confirmation sampai delivered. Kita sync dengan tracking number dari kurir.
+
+RINA [PM]:
+Good. User story kelima dari perspektif admin: "Sebagai admin Nusa, saya ingin bisa memonitor semua transaksi dan mengelola seller dari satu dashboard, supaya operasional berjalan efisien."
+
+DINA [BA]:
+Untuk admin panel, saya sudah draft modul-modulnya. Ada seller management — list seller, approval, suspend, dan detail performa. Ada product management — daftar produk pending review, approved, dan reported. Ada order management — semua transaksi dengan filter status. Ada dispute center — handle komplain dari buyer atau seller. Dan terakhir, basic analytics — revenue, GMV, top seller, top product.
+
+PAK HENDRA [CL]:
+Analytics itu penting Dina. Minimal saya ingin bisa lihat daily GMV, jumlah order per hari, dan conversion rate. Kalau bisa export ke Excel juga bagus.
+
+DINA [BA]:
+Noted. Export ke CSV atau Excel untuk data analytics akan kita masukkan ke acceptance criteria admin dashboard.
+
+================================================================
+BAGIAN 5 — FUNCTIONAL REQUIREMENTS DETAIL (11:45 - 12:15)
+================================================================
+
+RINA [PM]:
+Oke kita masuk ke functional requirements yang lebih technical. Arief, ini lebih ke domain kamu. Bisa kamu walk us through yang kamu sudah identifikasi?
+
+ARIEF [TL]:
+Sure. Saya akan group per modul.
+
+Modul pertama, Authentication dan Authorization. FR-001: sistem harus support tiga role — buyer, seller, dan admin, dengan permission yang berbeda-beda. FR-002: login bisa pakai email dan password, atau social login via Google. FR-003: seller dan admin perlu two-factor authentication via OTP SMS untuk keamanan. FR-004: session timeout 30 menit untuk admin, 7 hari untuk buyer dan seller dengan remember me option.
+
+DINA [BA]:
+Arief, untuk seller registration — apakah ada proses verifikasi identitas? KTP misalnya?
+
+ARIEF [TL]:
+Good question. Pak Hendra, apakah seller baru perlu submit KTP atau dokumen legalitas usaha saat daftar?
+
+PAK HENDRA [CL]:
+Ya, itu perlu. Minimal NIK dan foto KTP. Untuk seller yang sudah punya usaha berbadan hukum, kita minta NPWP juga. Ini untuk compliance dan juga untuk build trust ke buyer.
+
+ARIEF [TL]:
+Okay, jadi FR-005: seller registration harus include upload KTP wajib dan NPWP opsional. Admin harus verifikasi dokumen sebelum seller bisa aktif berjualan.
+
+Modul kedua, Product Catalog. FR-006: produk harus bisa dikategorikan dalam struktur dua level — kategori utama dan sub-kategori. Contoh, Makanan dan Minuman sebagai kategori, Kopi dan Teh sebagai sub-kategori. FR-007: setiap produk bisa punya varian — misalnya ukuran, warna, atau rasa — dengan stok dan harga yang berbeda per varian. FR-008: seller bisa set produk sebagai "pre-order" dengan estimasi waktu produksi. FR-009: sistem harus support soft delete — produk yang dihapus seller tidak langsung hilang dari database untuk keperluan history order.
+
+BAGAS [UI]:
+Arief, untuk varian produk — itu akan sangat mempengaruhi UI product detail page. Kita perlu pastikan selector varian-nya intuitive. Saya akan design dengan approach yang mirip Tokopedia tapi lebih clean.
+
+ARIEF [TL]:
+Noted Bagas. Koordinasi ya nanti soal data structure varian ini supaya kita align.
+
+Modul ketiga, Order Management. FR-010: order harus punya unique order ID dengan format yang readable, misalnya NM-2026-XXXXX. FR-011: satu checkout bisa berisi produk dari multiple seller, tapi sistem akan split jadi multiple sub-order per seller. FR-012: buyer bisa cancel order sebelum seller konfirmasi. Setelah dikonfirmasi, cancellation harus request dan perlu approval seller atau admin. FR-013: refund process — untuk transfer dan e-wallet, refund otomatis ke sumber pembayaran dalam 3-5 hari kerja. Untuk COD, refund manual via transfer.
+
+DINA [BA]:
+FR-013 itu perlu di-detail lagi. Apa trigger refund? Hanya kalau seller cancel, atau buyer juga bisa request refund setelah terima barang?
+
+MBAK TIARA [CL]:
+Buyer harus bisa komplain kalau barang tidak sesuai. Itu mandatory. Kalau tidak ada, kita akan banjir komplain di media sosial.
+
+ARIEF [TL]:
+Okay, kita tambahkan FR-014: buyer punya window 2x24 jam setelah status "delivered" untuk raise dispute. Kalau tidak ada dispute dalam window itu, order otomatis complete dan dana di-release ke seller. Ini mirip sistem escrow sederhana.
+
+PAK HENDRA [CL]:
+Setuju. Itu protect semua pihak.
+
+ARIEF [TL]:
+Modul keempat, Notification System. FR-015: semua notifikasi transaksional harus terkirim via minimal dua channel — in-app notification dan WhatsApp Business API. FR-016: seller bisa setting notification preference — mau terima WhatsApp, SMS, atau keduanya. FR-017: sistem harus log semua notifikasi yang terkirim beserta status delivery-nya untuk troubleshooting.
+
+DINA [BA]:
+Untuk WhatsApp Business API — kita perlu akun terverifikasi dari Meta. Itu prosesnya bisa 2-4 minggu. Arief, ini perlu kita kickstart sekarang ya supaya tidak jadi blocker.
+
+ARIEF [TL]:
+Betul Dina. Rina, bisa di-action item-kan ke Pak Hendra untuk register WhatsApp Business API atas nama PT. Nusa Digital Retail? Kita butuh akses itu dari sisi client.
+
+RINA [PM]:
+Di-noted. Action item untuk Pak Hendra.
+
+================================================================
+BAGIAN 6 — WIREFRAME DIRECTION (12:15 - 12:35)
+================================================================
+
+RINA [PM]:
+Oke, kita punya sekitar 20 menit untuk Bagas share wireframe direction. Bagas, lantai untuk kamu.
+
+BAGAS [UI]:
+Thanks Rina. Saya akan share screen sebentar.
+
+Jadi approach saya untuk NusaMarket adalah mobile-first dengan feel yang "warm and local" — kita tidak mau terasa seperti marketplace generik yang dingin. Kita mau buyer ngerasa lagi explore pasar produk lokal yang curated.
+
+Untuk color palette, saya propose primary color Terracotta — itu warna yang earthy, hangat, dan relate ke produk lokal Indonesia. Secondary-nya Off-white atau Cream. Accent-nya Deep Forest Green untuk call-to-action. Typography saya pilih Plus Jakarta Sans untuk body — itu typeface Indonesia yang modern. Untuk heading, saya eksplor Playfair Display untuk rasa editorial.
+
+PAK HENDRA [CL]:
+Terracotta itu menarik. Saya suka. Terasa lokal tapi tetap sophisticated.
+
+MBAK TIARA [CL]:
+Setuju. Itu diferensiasi visual yang bagus dari marketplace lain yang kebanyakan pakai merah atau oranye.
+
+BAGAS [UI]:
+Untuk homepage structure — di atas ada hero section dengan search bar yang besar dan prominent, karena discovery itu journey utama buyer. Di bawah hero ada horizontal scroll untuk kategori dengan icon yang custom-illustrated, bukan generic icon. Lalu ada section "Pilihan Editor" — ini featured products yang di-curate admin. Kemudian grid produk dengan infinite scroll.
+
+Untuk seller dashboard — saya pilih layout sidebar kiri yang collapsible. Di mobile, sidebar collapse jadi bottom navigation. Overview page menampilkan quick stats: total order hari ini, revenue bulan ini, produk aktif, dan rating rata-rata.
+
+ARIEF [TL]:
+Bagas, untuk seller dashboard — pastikan tabel order-nya bisa handle ratusan rows dengan pagination yang baik. Jangan infinite scroll untuk tabel, karena seller perlu bisa reference order tertentu dengan mudah.
+
+BAGAS [UI]:
+Agreed. Tabel dengan pagination dan search/filter. Saya akan design itu dengan approach data table yang clean.
+
+DINA [BA]:
+Satu hal dari sisi QA — semua form harus punya inline validation yang clear. Jangan error message yang hanya muncul setelah submit. Real-time validation saat user ketik.
+
+BAGAS [UI]:
+Sudah masuk di design system saya Dina. Setiap field akan punya state: default, focus, filled, error, dan success. Konsisten di seluruh aplikasi.
+
+PAK HENDRA [CL]:
+Bagas, satu request dari saya — homepage harus bisa ada banner yang bisa kita update sendiri untuk promosi. Tidak perlu minta developer setiap kali mau ganti banner.
+
+BAGAS [UI]:
+Itu masuk ke admin panel ya Pak Hendra. Jadi ada fitur banner management di admin — upload gambar, set link, set schedule kapan banner aktif dan kapan expired.
+
+ARIEF [TL]:
+Kita note itu sebagai FR tambahan — FR-018: admin bisa manage promotional banners dari CMS panel tanpa perlu deploy ulang.
+
+================================================================
+BAGIAN 7 — RISIKO & PENUTUP (12:35 - 12:45)
+================================================================
+
+RINA [PM]:
+Hampir selesai. Sebelum kita wrap up, ada beberapa risiko yang perlu kita acknowledge bersama.
+
+Risiko pertama adalah timeline. 4 bulan untuk scope sebesar ini cukup agresif. Kalau kita tidak disiplin di scope, kita akan slip. Mitigasi saya adalah kita akan lakukan bi-weekly review milestone. Kalau ada fitur yang at risk, kita cut lebih awal daripada delay launch.
+
+Risiko kedua adalah adoption dari merchant. Banyak merchant kita yang tidak tech-savvy. Kalau seller dashboard terlalu kompleks, mereka tidak akan pakai. Mitigasi: Bagas harus usability test seller dashboard dengan minimal 3 merchant asli sebelum final design.
+
+MBAK TIARA [CL]:
+Itu sangat good point Rina. Saya bisa bantu coordinate 3-5 merchant untuk usability testing.
+
+RINA [PM]:
+Perfect. Risiko ketiga adalah integrasi third-party — Midtrans, Rajaongkir, WhatsApp API. Kalau salah satu dari ini bermasalah, bisa block development. Mitigasi: Arief, bisa kita mulai spike semua integrasi ini di minggu pertama?
+
+ARIEF [TL]:
+Bisa. Saya akan set minggu pertama sebagai technical discovery — setup environment, proof of concept untuk semua integrasi kritikal. Kalau ada yang blocked, kita tahu dari awal dan bisa cari alternatif.
+
+RINA [PM]:
+Sempurna. Sekarang action items sebelum kita tutup.
+
+ACTION ITEMS:
+1. Pak Hendra  — Register WhatsApp Business API atas nama PT. Nusa Digital Retail. Target selesai: 16 Juni 2026.
+2. Mbak Tiara  — Coordinate 3-5 merchant untuk usability testing seller dashboard dengan Bagas. Target: 20 Juni 2026.
+3. Arief       — Technical discovery sprint: setup environment, PoC Midtrans + Rajaongkir + WhatsApp API. Target: 16 Juni 2026.
+4. Bagas       — Finalize wireframe untuk 3 halaman utama: Homepage, Product Detail, dan Seller Dashboard Overview. Target: 18 Juni 2026.
+5. Dina        — Compile semua functional requirements dari meeting hari ini menjadi dokumen formal. Target: 13 Juni 2026.
+6. Rina        — Send MOM (Minutes of Meeting) ke semua peserta hari ini. Target: EOD hari ini.
+
+NEXT MEETING:
+Selasa, 17 Juni 2026 — Design Review: Bagas present wireframe, semua peserta hadir.
+
+PAK HENDRA [CL]:
+Baik. Saya puas dengan meeting hari ini. Kita sudah sangat aligned. Satu pesan dari saya — kita harus jaga momentum ini. Jangan sampai nanti pas development sudah jalan, requirement-nya berubah terus. Saya commit dari sisi kami untuk tidak major scope change setelah ini.
+
+RINA [PM]:
+Terima kasih Pak Hendra, Mbak Tiara. Itu sangat appreciate. Dari kami juga kami commit untuk transparent kalau ada kendala. Kita build ini bersama-sama.
+
+Okay semua, kita wrap di sini. Terima kasih untuk diskusi yang produktif hari ini. Dina akan send MOM-nya nanti sore. Sampai jumpa di meeting berikutnya!
+
+SEMUA:
+Terima kasih! Sampai jumpa!
+
+================================================================
+END OF TRANSCRIPT
+Total durasi: 2 jam 45 menit
+Jumlah peserta: 6 orang
+================================================================
+
+SUMMARY DECISIONS YANG DIAMBIL:
+1. NusaMarket adalah kurasi marketplace (bukan open marketplace)
+2. Phase 1 MVP: catalog, seller dashboard, buyer experience, payment, order management, notifikasi, admin panel
+3. Review & rating defer ke Phase 2
+4. Payment methods: COD, Virtual Account, GoPay, OVO via Midtrans
+5. Pengiriman via Rajaongkir API (JNE, TIKI, JT, SiCepat)
+6. Notifikasi via WhatsApp Business API + in-app
+7. SLA konfirmasi order: 2 jam (jam kerja), 8 jam (luar jam kerja)
+8. Buyer dispute window: 2x24 jam setelah status delivered
+9. Color palette: Terracotta + Off-white + Deep Forest Green
+10. Typography: Plus Jakarta Sans + Playfair Display
+11. Seller verification: KTP wajib, NPWP opsional
+12. Admin bisa manage promotional banners tanpa deploy ulang
+
+================================================================

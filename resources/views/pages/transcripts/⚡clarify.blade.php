@@ -19,6 +19,10 @@ new #[Title('Clarify transcript session')] class extends Component {
     public array $goals = [];
     /** @var array<int, string> */
     public array $keyFeatures = [];
+    /** @var array<int, string> */
+    public array $templateFamilyOptions = [];
+    /** @var array<int, string> */
+    public array $designSystemOptions = [];
     public string $templateFamily = '';
     public string $designSystem = '';
 
@@ -31,8 +35,10 @@ new #[Title('Clarify transcript session')] class extends Component {
         $this->targetUsers = $transcriptSession->target_users ?? '';
         $this->goals = $transcriptSession->goals ?? [];
         $this->keyFeatures = $transcriptSession->key_features ?? [];
-        $this->templateFamily = $transcriptSession->template_family ?? '';
-        $this->designSystem = $transcriptSession->design_system ?? '';
+        $this->templateFamilyOptions = $transcriptSession->layout_recommendations ?: ['landing', 'app_shell'];
+        $this->designSystemOptions = $transcriptSession->design_system_recommendations ?: ['minimal', 'modern', 'corporate'];
+        $this->templateFamily = $transcriptSession->template_family ?: $this->templateFamilyOptions[0];
+        $this->designSystem = $transcriptSession->design_system ?: $this->designSystemOptions[0];
     }
 
     public function save(): void
@@ -45,8 +51,8 @@ new #[Title('Clarify transcript session')] class extends Component {
             'goals.*' => ['required', 'string'],
             'keyFeatures' => ['array', 'min:1'],
             'keyFeatures.*' => ['required', 'string'],
-            'templateFamily' => ['required', 'string', 'in:'.implode(',', $this->transcriptSession->layout_recommendations ?? [])],
-            'designSystem' => ['required', 'string', 'in:'.implode(',', $this->transcriptSession->design_system_recommendations ?? [])],
+            'templateFamily' => ['required', 'string', 'in:'.implode(',', $this->templateFamilyOptions)],
+            'designSystem' => ['required', 'string', 'in:'.implode(',', $this->designSystemOptions)],
         ]);
 
         $this->transcriptSession->forceFill([
@@ -57,6 +63,8 @@ new #[Title('Clarify transcript session')] class extends Component {
             'key_features' => array_values(array_filter($validated['keyFeatures'])),
             'template_family' => $validated['templateFamily'],
             'design_system' => $validated['designSystem'],
+            'layout_recommendations' => $this->templateFamilyOptions,
+            'design_system_recommendations' => $this->designSystemOptions,
             'status' => TranscriptSession::STATUS_CLARIFYING,
         ])->save();
 
@@ -145,21 +153,21 @@ new #[Title('Clarify transcript session')] class extends Component {
                     <div class="space-y-4">
                         <flux:heading size="lg">{{ __('Template Family') }}</flux:heading>
 
-                        @foreach ($transcriptSession->layout_recommendations ?? [] as $option)
-                            <flux:radio.group wire:model="templateFamily">
-                                <flux:radio :value="$option">{{ $option }}</flux:radio>
-                            </flux:radio.group>
-                        @endforeach
+                        <flux:radio.group wire:model="templateFamily" variant="cards" class="max-sm:flex-col">
+                            @foreach ($templateFamilyOptions as $option)
+                                <flux:radio :value="$option" :label="str($option)->replace('_', ' ')->headline()" />
+                            @endforeach
+                        </flux:radio.group>
                     </div>
 
                     <div class="space-y-4">
                         <flux:heading size="lg">{{ __('Design System') }}</flux:heading>
 
-                        @foreach ($transcriptSession->design_system_recommendations ?? [] as $option)
-                            <flux:radio.group wire:model="designSystem">
-                                <flux:radio :value="$option">{{ $option }}</flux:radio>
-                            </flux:radio.group>
-                        @endforeach
+                        <flux:radio.group wire:model="designSystem" variant="cards" class="max-sm:flex-col">
+                            @foreach ($designSystemOptions as $option)
+                                <flux:radio :value="$option" :label="str($option)->replace('_', ' ')->headline()" />
+                            @endforeach
+                        </flux:radio.group>
                     </div>
                 </div>
             </flux:card>

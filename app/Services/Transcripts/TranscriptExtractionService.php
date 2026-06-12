@@ -4,6 +4,7 @@ namespace App\Services\Transcripts;
 
 use App\Ai\Agents\TranscriptExtractionAgent;
 use App\Models\TranscriptSession;
+use App\Services\Ai\TextProviderResolver;
 use App\Services\Generation\PromptBuilder;
 use Illuminate\Contracts\Support\Arrayable;
 use Throwable;
@@ -11,6 +12,7 @@ use Throwable;
 class TranscriptExtractionService
 {
     public function __construct(
+        protected TextProviderResolver $textProviderResolver,
         protected PromptBuilder $promptBuilder,
     ) {}
 
@@ -23,7 +25,7 @@ class TranscriptExtractionService
         try {
             $response = TranscriptExtractionAgent::make()->prompt(
                 $this->promptBuilder->buildTranscriptExtractionPrompt($transcriptSession->transcript_text),
-                model: config('services.gemini.model'),
+                provider: $this->textProviderResolver->providerChain(),
                 timeout: (int) config('services.gemini.timeout', 120),
             );
 

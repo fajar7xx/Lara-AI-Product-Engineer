@@ -71,6 +71,31 @@ test('clarification page shows extracted defaults and recommendations', function
         ->assertSee('modern');
 });
 
+test('clarification page falls back to default options when recommendations are missing', function () {
+    $user = User::factory()->create();
+    $transcriptSession = TranscriptSession::factory()->for($user)->create([
+        'status' => 'clarifying',
+        'project_name' => 'SpecSprint',
+        'project_summary' => 'Turn transcripts into planning artifacts.',
+        'target_users' => 'Product managers and founders',
+        'goals' => ['Generate structured product docs quickly'],
+        'key_features' => ['Transcript extraction', 'Clarification workflow'],
+        'template_family' => null,
+        'design_system' => null,
+        'layout_recommendations' => [],
+        'design_system_recommendations' => [],
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('transcripts.clarify', ['transcriptSession' => $transcriptSession]))
+        ->assertOk()
+        ->assertSee('Landing')
+        ->assertSee('App Shell')
+        ->assertSee('Minimal')
+        ->assertSee('Modern')
+        ->assertSee('Corporate');
+});
+
 test('user may edit context fields and keep clarification status', function () {
     $user = User::factory()->create();
     $transcriptSession = TranscriptSession::factory()->for($user)->create([

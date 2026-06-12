@@ -8,6 +8,7 @@ use App\Ai\Agents\PrdGenerationAgent;
 use App\Ai\Agents\UserStoriesGenerationAgent;
 use App\Models\GenerationOutput;
 use App\Models\TranscriptSession;
+use App\Services\Ai\TextProviderResolver;
 use Illuminate\Contracts\Support\Arrayable;
 use Laravel\Ai\Exceptions\FailoverableException;
 use Throwable;
@@ -15,6 +16,7 @@ use Throwable;
 class SessionGenerationService
 {
     public function __construct(
+        protected TextProviderResolver $textProviderResolver,
         protected MarkdownBlueprintService $markdownBlueprintService,
         protected HtmlAssemblyService $htmlAssemblyService,
         protected PromptBuilder $promptBuilder,
@@ -153,7 +155,7 @@ class SessionGenerationService
         $response = $this->structuredResponse(
             PrdGenerationAgent::make()->prompt(
                 $this->promptBuilder->buildPrdPrompt($transcriptSession),
-                model: config('services.gemini.model'),
+                provider: $this->textProviderResolver->providerChain(),
                 timeout: (int) config('services.gemini.timeout', 120),
             )
         );
@@ -169,7 +171,7 @@ class SessionGenerationService
         $response = $this->structuredResponse(
             UserStoriesGenerationAgent::make()->prompt(
                 $this->promptBuilder->buildUserStoriesPrompt($transcriptSession),
-                model: config('services.gemini.model'),
+                provider: $this->textProviderResolver->providerChain(),
                 timeout: (int) config('services.gemini.timeout', 120),
             )
         );
@@ -185,7 +187,7 @@ class SessionGenerationService
         $response = $this->structuredResponse(
             FunctionalRequirementsGenerationAgent::make()->prompt(
                 $this->promptBuilder->buildFunctionalRequirementsPrompt($transcriptSession),
-                model: config('services.gemini.model'),
+                provider: $this->textProviderResolver->providerChain(),
                 timeout: (int) config('services.gemini.timeout', 120),
             )
         );
@@ -201,7 +203,7 @@ class SessionGenerationService
         $response = $this->structuredResponse(
             HtmlPageContentAgent::make()->prompt(
                 $this->promptBuilder->buildHtmlPagePrompt($transcriptSession),
-                model: config('services.gemini.model'),
+                provider: $this->textProviderResolver->providerChain(),
                 timeout: (int) config('services.gemini.timeout', 120),
             )
         );
