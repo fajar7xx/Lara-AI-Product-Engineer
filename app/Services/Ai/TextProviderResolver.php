@@ -10,11 +10,11 @@ class TextProviderResolver
     public function providerChain(): array
     {
         $providers = [
-            'gemini' => $this->providerModel('gemini', 'gemini-3.5-flash'),
+            'openrouter' => $this->providerModel('openrouter', 'deepseek/deepseek-v4-flash'),
         ];
 
-        if ($this->hasProviderKey('openai')) {
-            $providers['openai'] = $this->providerModel('openai', 'gpt-4.1-mini');
+        if ($this->hasProviderKey('gemini')) {
+            $providers['gemini'] = $this->providerModel('gemini', 'gemini-3.5-flash');
         }
 
         return $providers;

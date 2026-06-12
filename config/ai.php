@@ -139,6 +139,11 @@ return [
         'openrouter' => [
             'driver' => 'openrouter',
             'key' => env('OPENROUTER_API_KEY'),
+            'models' => [
+                'text' => [
+                    'default' => env('OPENROUTER_MODEL', 'deepseek/deepseek-v4-flash'),
+                ],
+            ],
         ],
 
         'voyageai' => [
